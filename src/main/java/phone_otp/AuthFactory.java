@@ -1,22 +1,26 @@
 package phone_otp;
 
+import org.keycloak.Config;
 import org.keycloak.authentication.Authenticator;
 import org.keycloak.authentication.AuthenticatorFactory;
 import org.keycloak.models.AuthenticationExecutionModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.provider.ProviderConfigProperty;
-import java.util.Collections; 
+
+import java.util.Collections;
 import java.util.List;
+
+import static org.keycloak.models.AuthenticationExecutionModel.Requirement;
 
 public class AuthFactory implements AuthenticatorFactory {
 
     public static final String PROVIDER_ID = "phone-otp-authenticator";
 
-    private static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES = {
-            AuthenticationExecutionModel.Requirement.REQUIRED,
-            AuthenticationExecutionModel.Requirement.ALTERNATIVE,
-            AuthenticationExecutionModel.Requirement.DISABLED
+    private static final Requirement[] REQUIREMENT_CHOICES = {
+            Requirement.REQUIRED,
+            Requirement.ALTERNATIVE,
+            Requirement.DISABLED
     };
 
     @Override
@@ -40,7 +44,7 @@ public class AuthFactory implements AuthenticatorFactory {
     }
 
     @Override
-    public AuthenticationExecutionModel.Requirement[] getRequirementChoices() {
+    public Requirement[] getRequirementChoices() {
         return REQUIREMENT_CHOICES;
     }
 
@@ -50,7 +54,7 @@ public class AuthFactory implements AuthenticatorFactory {
     }
 
     @Override
-    public void init(org.keycloak.Config.Scope config) {
+    public void init(Config.Scope config) {
     }
 
     @Override
@@ -70,9 +74,14 @@ public class AuthFactory implements AuthenticatorFactory {
     public boolean isConfigurable() {
         return false;
     }
-    
+
     @Override
     public List<ProviderConfigProperty> getConfigProperties() {
         return Collections.emptyList();
+    }
+
+    @Override
+    public String getReferenceCategory() {
+        return null;
     }
 }
