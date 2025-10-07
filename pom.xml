@@ -6,13 +6,14 @@
 
     <groupId>phone_otp</groupId>
     <artifactId>phone-otp-provider</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>${keycloak.version}</version>
     <packaging>jar</packaging>
 
     <properties>
+        <keycloak.version>26.4.0</keycloak.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <keycloak.version>26.4.0</keycloak.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
@@ -49,6 +50,7 @@
     </dependencies>
 
     <build>
+        <finalName>phone-otp-provider</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
