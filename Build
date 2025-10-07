@@ -3,4 +3,4 @@ docker run --rm \
   -v "$(pwd)":/app \
   -w /app \
   maven:3.9.9-eclipse-temurin-21 \
-  mvn -B clean package -DskipTests
+  mvn -B -U clean package -DskipTests

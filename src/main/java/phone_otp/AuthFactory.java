@@ -17,6 +17,8 @@ public class AuthFactory implements AuthenticatorFactory {
 
     public static final String PROVIDER_ID = "phone-otp-authenticator";
 
+    static Auth SINGLETON = new Auth();
+
     private static final Requirement[] REQUIREMENT_CHOICES = {
             Requirement.REQUIRED,
             Requirement.ALTERNATIVE,
@@ -25,12 +27,36 @@ public class AuthFactory implements AuthenticatorFactory {
 
     @Override
     public Authenticator create(KeycloakSession session) {
-        return new Auth();
+        return SINGLETON;
     }
+
+    @Override
+    public void init(Config.Scope config) { }
+
+    @Override
+    public void postInit(KeycloakSessionFactory factory) { }
+
+    @Override
+    public void close() { }
 
     @Override
     public String getId() {
         return PROVIDER_ID;
+    }
+
+    @Override
+    public String getReferenceCategory() {
+        return "phone-otp";
+    }
+
+    @Override
+    public boolean isConfigurable() {
+        return false;
+    }
+
+    @Override
+    public AuthenticationExecutionModel.Requirement[] getRequirementChoices() {
+        return REQUIREMENT_CHOICES;
     }
 
     @Override
@@ -44,8 +70,8 @@ public class AuthFactory implements AuthenticatorFactory {
     }
 
     @Override
-    public Requirement[] getRequirementChoices() {
-        return REQUIREMENT_CHOICES;
+    public List<ProviderConfigProperty> getConfigProperties() {
+        return Collections.emptyList();
     }
 
     @Override
@@ -53,35 +79,4 @@ public class AuthFactory implements AuthenticatorFactory {
         return false;
     }
 
-    @Override
-    public void init(Config.Scope config) {
-    }
-
-    @Override
-    public void postInit(KeycloakSessionFactory factory) {
-    }
-
-    @Override
-    public void close() {
-    }
-
-    @Override
-    public boolean isSingleton() {
-        return true;
-    }
-
-    @Override
-    public boolean isConfigurable() {
-        return false;
-    }
-
-    @Override
-    public List<ProviderConfigProperty> getConfigProperties() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public String getReferenceCategory() {
-        return null;
-    }
 }
