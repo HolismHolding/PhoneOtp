@@ -9,9 +9,6 @@ import org.keycloak.provider.ProviderConfigProperty;
 import java.util.Collections; 
 import java.util.List;
 
-// Corrected import path for Scope is generally not needed if we use the FQN in the method body,
-// but let's try the common workaround for the init method.
-
 public class AuthFactory implements AuthenticatorFactory {
 
     public static final String PROVIDER_ID = "phone-otp-authenticator";
@@ -52,21 +49,16 @@ public class AuthFactory implements AuthenticatorFactory {
         return false;
     }
 
-    // --- FIX APPLIED HERE: Using the fully qualified name for the parameter type ---
     @Override
-    public void init(org.keycloak.provider.Config.Scope config) {
-        // Now uses the fully qualified name: org.keycloak.provider.Config.Scope
-        // This is often the actual location in modern Keycloak versions.
+    public void init(org.keycloak.Config.Scope config) {
     }
 
     @Override
     public void postInit(KeycloakSessionFactory factory) {
-        // No-op
     }
 
     @Override
     public void close() {
-        // No-op
     }
 
     @Override
