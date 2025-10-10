@@ -6,7 +6,8 @@ import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 import org.keycloak.models.KeycloakSession;
 import org.jboss.logging.Logger;
-import org.keycloak.theme.ThemeProvider;
+import org.keycloak.forms.login.LoginFormsProvider;
+import jakarta.ws.rs.core.Response;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,8 +18,6 @@ public class Auth implements Authenticator {
 
     @Override
     public void authenticate(AuthenticationFlowContext context) {
-        LOG.info("Phone OTP Authenticator running. Rendering phone form.");
-
         String phone = (String) context.getSession().getAttribute("phone");
         String errorMessage = (String) context.getSession().getAttribute("phoneError");
 
@@ -26,9 +25,12 @@ public class Auth implements Authenticator {
         attributes.put("phone", phone);
         attributes.put("errorMessage", errorMessage);
 
-        context.getSession().getProvider(ThemeProvider.class)
-            .getTheme(ThemeProvider.Type.LOGIN)
-            .render("templates/phone.ftl", context.getSession(), context.getRequest(), context.getResponse(), attributes);
+        LoginFormsProvider form = context.form();
+        form.setAttribute("phone", phone);
+        form.setAttribute("errorMessage", errorMessage);
+
+        Response challengeResponse = form.createForm("templates/phone.ftl");
+        context.challenge(challengeResponse);
     }
 
     @Override
