@@ -23,7 +23,7 @@ public class Auth implements Authenticator {
         form.setAttribute("phone", phone);
         form.setAttribute("errorMessage", errorMessage);
 
-        Response challengeResponse = form.createForm("templates/phone.ftl");
+        Response challengeResponse = form.createForm("phone.ftl");
         context.challenge(challengeResponse);
     }
 
