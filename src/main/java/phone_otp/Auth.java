@@ -43,7 +43,7 @@ public class Auth implements Authenticator {
         RealmModel realm = context.getRealm();
         UserProvider userProvider = session.users();
 
-        UserModel user = userProvider.getUserByUsername(phone, realm);
+        UserModel user = userProvider.getUserByUsername(realm, phone);
 
         if (user == null) {
             user = userProvider.addUser(realm, phone);
