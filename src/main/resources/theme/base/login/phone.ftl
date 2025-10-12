@@ -27,8 +27,10 @@
 
     <#-- Send OTP Button -->
     <div class="submit-container">
-        <#-- Button to send OTP -->
-        <button type="submit" class="btn-send-otp" ${sendingOtp ? 'disabled' : ''}>${sendingOtp ? sendingOtpText : sendOtpText}</button>
+        <button type="submit" class="btn-send-otp"
+            <#if sendingOtp?? && sendingOtp>disabled</#if>>
+            <#if sendingOtp?? && sendingOtp>${sendingOtpText}<#else>${sendOtpText}</#if>
+        </button>
     </div>
 
     <#-- Change Phone Option -->
