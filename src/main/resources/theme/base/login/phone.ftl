@@ -1,6 +1,6 @@
 <#-- Phone form template for Keycloak Provider -->
 
-<#-- Translate messages from Keycloak localization -->
+<#-- Translations / text labels -->
 <#assign phoneLabel = "Phone Number">
 <#assign sendOtpText = "Send OTP">
 <#assign changePhoneText = "Change Phone">
@@ -14,13 +14,18 @@
     <#-- Phone Input -->
     <div class="input-container">
         <label for="phone">${phoneLabel}</label>
-        <input type="tel" id="phone" name="phone" placeholder="${phoneLabel}" class="input-field" value="${phone}" />
+        <input type="tel"
+               id="phone"
+               name="phone"
+               placeholder="${phoneLabel}"
+               class="input-field"
+               value="${phone!''}" />
         
         <#-- Display error messages -->
-        <#if emptyPhone??>
+        <#if emptyPhone?? && emptyPhone>
             <div class="error-message">${emptyPhoneText}</div>
         </#if>
-        <#if invalidPhone??>
+        <#if invalidPhone?? && invalidPhone>
             <div class="error-message">${invalidPhoneText}</div>
         </#if>
     </div>
@@ -29,13 +34,19 @@
     <div class="submit-container">
         <button type="submit" class="btn-send-otp"
             <#if sendingOtp?? && sendingOtp>disabled</#if>>
-            <#if sendingOtp?? && sendingOtp>${sendingOtpText}<#else>${sendOtpText}</#if>
+            <#if sendingOtp?? && sendingOtp>
+                ${sendingOtpText}
+            <#else>
+                ${sendOtpText}
+            </#if>
         </button>
     </div>
 
     <#-- Change Phone Option -->
-    <#if visibleOtp?? && !empty(phone)>
-        <button class="btn-change-phone" onclick="changePhoneNumber()">${changePhoneText}</button>
+    <#if visibleOtp?? && (phone?? && phone?has_content)>
+        <button class="btn-change-phone" onclick="changePhoneNumber()">
+            ${changePhoneText}
+        </button>
     </#if>
 </div>
 
