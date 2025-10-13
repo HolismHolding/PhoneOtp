@@ -1337,7 +1337,7 @@
         {
           "authenticator": "phone-otp-authenticator",
           "authenticatorFlow": false,
-          "requirement": "DISABLED",
+          "requirement": "REQUIRED",
           "priority": 0,
           "autheticatorFlow": false,
           "userSetupAllowed": false
