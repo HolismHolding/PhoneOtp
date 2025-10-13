@@ -19,6 +19,9 @@
                    />
 
             <#-- Display error messages -->
+            <#if errorMessage?? && errorMessage?has_content>
+                <span class="${properties.kcInputErrorMessageClass!}" aria-live="polite">${errorMessage}</span>
+            </#if>
             <#if emptyPhone?? && emptyPhone>
                 <span class="${properties.kcInputErrorMessageClass!}" aria-live="polite">${emptyPhoneText}</span>
             </#if>
