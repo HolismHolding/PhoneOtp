@@ -1,4 +1,5 @@
 <#-- Phone form template for Keycloak Provider (i18n-enabled) -->
+<link rel="stylesheet" type="text/css" href="${url.resourcesPath}/css/styles.css" />
 
 <form id="phone-form" action="${url.loginAction}" method="POST">
     <div class="phone-form">
