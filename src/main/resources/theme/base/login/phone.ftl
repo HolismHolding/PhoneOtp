@@ -1,5 +1,5 @@
-<#-- Phone form template for Keycloak Provider (i18n-enabled) -->
-<link rel="stylesheet" type="text/css" href="${url.resourcesPath}/css/styles.css" />
+<#import "template.ftl" as layout>
+<@layout.layoutBody>
 
 <form id="phone-form" action="${url.loginAction}" method="POST">
     <div class="phone-form">
@@ -7,10 +7,15 @@
 
         <div class="${properties.kcFormGroupClass!}">
             <label for="phone" class="${properties.kcLabelClass!}">${msg("phoneLabel")}</label>
-            <input tabindex="1" id="phone" class="${properties.kcInputClass!}" name="phone" value="${phone!''}" type="tel" 
-                   placeholder="${msg("phoneLabel")}" aria-invalid="<#if phoneErrorKey??>true</#if>" />
+            <input tabindex="1"
+                   id="phone"
+                   class="${properties.kcInputClass!}"
+                   name="phone"
+                   value="${phone!''}"
+                   type="tel"
+                   placeholder="${msg("phoneLabel")}"
+                   aria-invalid="<#if phoneErrorKey??>true</#if>" />
 
-            <#-- Display error messages based on keys set in Auth.java -->
             <#if phoneErrorKey??>
                 <span class="${properties.kcInputErrorMessageClass!}" aria-live="polite">
                     ${msg(phoneErrorKey)}
@@ -19,7 +24,8 @@
         </div>
 
         <div class="${properties.kcFormGroupClass!}">
-            <button type="submit" class="btn-send-otp ${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!}"
+            <button type="submit"
+                    class="btn-send-otp ${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!}"
                     id="submit-btn">
                 ${msg("sendOtpText")}
             </button>
@@ -27,7 +33,7 @@
 
         <#if visibleOtp?? && (phone?? && phone?has_content)>
             <div class="kc-form-options-wrapper">
-                <button class="btn-change-phone" onclick="changePhoneNumber()">
+                <button type="button" class="btn-change-phone" onclick="changePhoneNumber()">
                     ${msg("changePhoneText")}
                 </button>
             </div>
@@ -36,12 +42,14 @@
 </form>
 
 <script>
-    document.getElementById('phone-form').onsubmit = function() {
-        const btn = document.getElementById('submit-btn')
-        btn.disabled = true
-        btn.innerText = '${msg("sendingOtpText")}'
-        return true
-    }
+document.getElementById('phone-form').onsubmit = function() {
+    const btn = document.getElementById('submit-btn')
+    btn.disabled = true
+    btn.innerText = '${msg("sendingOtpText")}'
+    return true
+}
 
-    function changePhoneNumber() {}
+function changePhoneNumber() {}
 </script>
+
+</@layout.layoutBody>
