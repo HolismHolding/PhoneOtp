@@ -15,7 +15,6 @@ import static org.keycloak.models.AuthenticationExecutionModel.Requirement;
 public class AuthFactory implements AuthenticatorFactory {
 
     public static final String PROVIDER_ID = "phone-otp-authenticator";
-
     static Auth SINGLETON = new Auth();
 
     private static final Requirement[] REQUIREMENT_CHOICES = {
@@ -60,12 +59,12 @@ public class AuthFactory implements AuthenticatorFactory {
 
     @Override
     public String getDisplayType() {
-        return "Phone OTP (Quick)";
+        return SINGLETON.formMsg("phoneOtpDisplayType");
     }
 
     @Override
     public String getHelpText() {
-        return "Minimal custom authenticator for phone OTP flow.";
+        return SINGLETON.formMsg("phoneOtpHelpText");
     }
 
     @Override
@@ -77,5 +76,4 @@ public class AuthFactory implements AuthenticatorFactory {
     public boolean isUserSetupAllowed() {
         return false;
     }
-
 }
