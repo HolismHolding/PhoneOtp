@@ -1,6 +1,10 @@
 <#macro layoutBody>
 <!DOCTYPE html>
+<#if locale?? && locale.currentLanguageTag??>
 <html lang="${locale.currentLanguageTag}">
+<#else>
+<html lang="en">
+</#if>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
