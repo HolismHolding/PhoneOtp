@@ -7,17 +7,13 @@
         <div class="${properties.kcFormGroupClass!}">
             <label for="phone" class="${properties.kcLabelClass!}">${msg("phoneLabel")}</label>
             <input tabindex="1" id="phone" class="${properties.kcInputClass!}" name="phone" value="${phone!''}" type="tel" 
-                   placeholder="${msg("phoneLabel")}" aria-invalid="<#if emptyPhone??>true</#if>"
-                   />
+                   placeholder="${msg("phoneLabel")}" aria-invalid="<#if phoneErrorKey??>true</#if>" />
 
-            <#if errorMessage?? && errorMessage?has_content>
-                <span class="${properties.kcInputErrorMessageClass!}" aria-live="polite">${errorMessage}</span>
-            </#if>
-            <#if emptyPhone?? && emptyPhone>
-                <span class="${properties.kcInputErrorMessageClass!}" aria-live="polite">${msg("emptyPhoneText")}</span>
-            </#if>
-            <#if invalidPhone?? && invalidPhone>
-                <span class="${properties.kcInputErrorMessageClass!}" aria-live="polite">${msg("invalidPhoneText")}</span>
+            <#-- Display error messages based on keys set in Auth.java -->
+            <#if phoneErrorKey??>
+                <span class="${properties.kcInputErrorMessageClass!}" aria-live="polite">
+                    ${msg(phoneErrorKey)}
+                </span>
             </#if>
         </div>
 
@@ -40,9 +36,10 @@
 
 <script>
     document.getElementById('phone-form').onsubmit = function() {
-        document.getElementById('submit-btn').disabled = true;
-        document.getElementById('submit-btn').innerText = '${msg("sendingOtpText")}';
-        return true;
+        const btn = document.getElementById('submit-btn')
+        btn.disabled = true
+        btn.innerText = '${msg("sendingOtpText")}'
+        return true
     }
 
     function changePhoneNumber() {}

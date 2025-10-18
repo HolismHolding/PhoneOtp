@@ -7,16 +7,13 @@
         <div class="${properties.kcFormGroupClass!}">
             <label for="otp" class="${properties.kcLabelClass!}">${msg("otpLabel")}</label>
             <input tabindex="1" id="otp" class="${properties.kcInputClass!}" name="otp" type="text"
-                   value="${otp!''}" placeholder="${msg("otpLabel")}" aria-invalid="<#if emptyOtp??>true</#if>" />
+                   value="${otp!''}" placeholder="${msg("otpLabel")}" aria-invalid="<#if otpErrorKey??>true</#if>" />
 
-            <#if errorMessage?? && errorMessage?has_content>
-                <span class="${properties.kcInputErrorMessageClass!}" aria-live="polite">${errorMessage}</span>
-            </#if>
-            <#if emptyOtp?? && emptyOtp>
-                <span class="${properties.kcInputErrorMessageClass!}" aria-live="polite">${msg("emptyOtpText")}</span>
-            </#if>
-            <#if invalidOtp?? && invalidOtp>
-                <span class="${properties.kcInputErrorMessageClass!}" aria-live="polite">${msg("invalidOtpText")}</span>
+            <#-- Display error messages based on keys set in Auth.java -->
+            <#if otpErrorKey??>
+                <span class="${properties.kcInputErrorMessageClass!}" aria-live="polite">
+                    ${msg(otpErrorKey)}
+                </span>
             </#if>
         </div>
 
@@ -28,6 +25,7 @@
             </button>
         </div>
 
+        <#-- Timer and resend logic -->
         <#if timer?? && timer > 0>
             <div class="timer-container">${msg("timerText")} ${timer} ${msg("secondsText")}</div>
         <#elseif sendingOtp?? && sendingOtp == true>

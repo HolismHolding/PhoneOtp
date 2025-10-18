@@ -25,13 +25,13 @@ public class Auth implements Authenticator {
     @Override
     public void authenticate(AuthenticationFlowContext context) {
         String phone = (String) context.getSession().getAttribute("phone");
-        String errorMessage = (String) context.getSession().getAttribute("phoneError");
+        String errorKey = (String) context.getSession().getAttribute("phoneErrorKey");
 
-        context.getSession().removeAttribute("phoneError");
+        context.getSession().removeAttribute("phoneErrorKey");
 
         LoginFormsProvider form = context.form();
         form.setAttribute("phone", phone);
-        form.setAttribute("errorMessage", errorMessage);
+        form.setAttribute("phoneErrorKey", errorKey);
 
         Response challengeResponse = form.createForm("phone.ftl");
         context.challenge(challengeResponse);
@@ -40,7 +40,6 @@ public class Auth implements Authenticator {
     @Override
     public void action(AuthenticationFlowContext context) {
         MultivaluedMap<String, String> formParams = context.getHttpRequest().getDecodedFormParameters();
-        LoginFormsProvider form = context.form();
 
         if (formParams.containsKey("otp")) {
             verifyOtp(context, formParams.getFirst("otp"));
@@ -49,7 +48,7 @@ public class Auth implements Authenticator {
 
         String phone = formParams.getFirst("phone");
         if (phone == null || phone.isEmpty()) {
-            context.getSession().setAttribute("phoneError", form.msg("emptyPhoneText"));
+            context.getSession().setAttribute("phoneErrorKey", "emptyPhoneText");
             authenticate(context);
             return;
         }
@@ -73,13 +72,14 @@ public class Auth implements Authenticator {
 
         if (sendOtp(context, phone, otp)) {
             LOG.info("OTP sent successfully to: " + phone);
+            LoginFormsProvider form = context.form();
             form.setAttribute("phone", phone);
             Response otpForm = form.createForm("otp.ftl");
             context.challenge(otpForm);
         } else {
-            String error = (String) session.getAttribute("otpError");
+            String error = (String) session.getAttribute("otpErrorKey");
             LOG.warn("Failed to send OTP to: " + phone + " — " + error);
-            context.getSession().setAttribute("phoneError", error != null ? error : form.msg("otpSendFailed"));
+            context.getSession().setAttribute("phoneErrorKey", error != null ? error : "otpSendFailed");
             authenticate(context);
         }
     }
@@ -87,7 +87,6 @@ public class Auth implements Authenticator {
     private void verifyOtp(AuthenticationFlowContext context, String enteredOtp) {
         String expectedOtp = (String) context.getSession().getAttribute("otp");
         String phone = (String) context.getSession().getAttribute("phone");
-        LoginFormsProvider form = context.form();
 
         if (expectedOtp != null && expectedOtp.equals(enteredOtp)) {
             RealmModel realm = context.getRealm();
@@ -99,8 +98,9 @@ public class Auth implements Authenticator {
             context.success();
         } else {
             LOG.warn("Invalid OTP entered for phone: " + phone);
+            LoginFormsProvider form = context.form();
             form.setAttribute("phone", phone);
-            form.setAttribute("errorMessage", form.msg("invalidOtpText"));
+            form.setAttribute("otpErrorKey", "invalidOtpText");
             Response otpForm = form.createForm("otp.ftl");
             context.challenge(otpForm);
         }
@@ -124,7 +124,7 @@ public class Auth implements Authenticator {
 
             if (urlTemplate == null || urlTemplate.isEmpty()) {
                 LOG.error("OTP URL template not configured in Admin Panel");
-                context.getSession().setAttribute("otpError", context.form().msg("otpConfigMissing"));
+                context.getSession().setAttribute("otpErrorKey", "otpConfigMissing");
                 return false;
             }
 
@@ -163,13 +163,13 @@ public class Auth implements Authenticator {
             if (status == 200) {
                 return true;
             } else {
-                context.getSession().setAttribute("otpError", response.toString());
+                context.getSession().setAttribute("otpErrorKey", "otpSendFailed");
                 return false;
             }
 
         } catch (Exception e) {
             LOG.error("Failed to send OTP request: " + e.getMessage(), e);
-            context.getSession().setAttribute("otpError", context.form().msg("otpSendFailedWithMsg", e.getMessage()));
+            context.getSession().setAttribute("otpErrorKey", "otpSendFailed");
             return false;
         }
     }
@@ -200,9 +200,9 @@ public class Auth implements Authenticator {
 
         ProviderConfigProperty urlProperty = new ProviderConfigProperty();
         urlProperty.setName(CONFIG_URL_TEMPLATE);
-        urlProperty.setLabel("${msg('otpUrlTemplateLabel')}");
+        urlProperty.setLabel("OTP URL Template");
         urlProperty.setType(ProviderConfigProperty.STRING_TYPE);
-        urlProperty.setHelpText("${msg('otpUrlTemplateHelp')}");
+        urlProperty.setHelpText("Example: https://some-host.tld/sms/send?phone={phone}&otp={otp}&realm={realm}");
         configProperties.add(urlProperty);
 
         return configProperties;

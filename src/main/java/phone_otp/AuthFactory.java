@@ -59,12 +59,12 @@ public class AuthFactory implements AuthenticatorFactory {
 
     @Override
     public String getDisplayType() {
-        return SINGLETON.formMsg("phoneOtpDisplayType");
+        return "Phone OTP (Quick)";
     }
 
     @Override
     public String getHelpText() {
-        return SINGLETON.formMsg("phoneOtpHelpText");
+        return "Minimal custom authenticator for phone OTP flow.";
     }
 
     @Override

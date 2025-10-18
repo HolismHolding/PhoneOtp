@@ -4,3 +4,4 @@ docker run --rm \
   -w /app \
   maven:3.9.9-eclipse-temurin-21 \
   mvn -B -U clean package -DskipTests
+sudo chmod --preserve-root -R 777 target
