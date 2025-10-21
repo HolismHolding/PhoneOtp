@@ -160,10 +160,20 @@ public class Auth implements Authenticator {
 
             LOG.info("OTP server response (" + status + "): " + response);
 
+            String message = null;
+            try (JsonReader jsonReader = Json.createReader(new StringReader(response.toString()))) {
+                JsonObject json = jsonReader.readObject();
+                if (json.containsKey("message")) {
+                    message = json.getString("message");
+                }
+            } catch (Exception e) {
+                LOG.warn("Failed to parse OTP server response as JSON: " + e.getMessage());
+            }
+
             if (status == 200) {
                 return true;
             } else {
-                context.getSession().setAttribute("otpErrorKey", "otpSendFailed");
+                context.getSession().setAttribute("otpErrorKey", message != null ? message : "otpSendFailed");
                 return false;
             }
 
