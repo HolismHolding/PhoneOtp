@@ -161,13 +161,19 @@ public class Auth implements Authenticator {
             LOG.info("OTP server response (" + status + "): " + response);
 
             String message = null;
-            try (JsonReader jsonReader = Json.createReader(new StringReader(response.toString()))) {
-                JsonObject json = jsonReader.readObject();
-                if (json.containsKey("message")) {
-                    message = json.getString("message");
+            String resp = response.toString().trim();
+            if (resp.startsWith("{") && resp.endsWith("}")) {
+                int idx = resp.indexOf("\"message\"");
+                if (idx >= 0) {
+                    int colon = resp.indexOf(":", idx);
+                    if (colon >= 0) {
+                        int startQuote = resp.indexOf("\"", colon);
+                        int endQuote = resp.indexOf("\"", startQuote + 1);
+                        if (startQuote >= 0 && endQuote >= 0) {
+                            message = resp.substring(startQuote + 1, endQuote);
+                        }
+                    }
                 }
-            } catch (Exception e) {
-                LOG.warn("Failed to parse OTP server response as JSON: " + e.getMessage());
             }
 
             if (status == 200) {
