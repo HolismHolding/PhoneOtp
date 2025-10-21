@@ -202,7 +202,7 @@ public class Auth implements Authenticator {
         urlProperty.setName(CONFIG_URL_TEMPLATE);
         urlProperty.setLabel("OTP URL Template");
         urlProperty.setType(ProviderConfigProperty.STRING_TYPE);
-        urlProperty.setHelpText("Example: https://some-host.tld/sms/send?phone={phone}&otp={otp}&realm={realm}");
+        urlProperty.setHelpText("Example: https://some-host.tld/accounts/sendOtp?phone={phone}&otp={otp}&realm={realm}");
         configProperties.add(urlProperty);
 
         return configProperties;
