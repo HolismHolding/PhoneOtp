@@ -43,6 +43,8 @@ public class OtpSender {
                     .replace("{otp}", otp)
                     .replace("{realm}", realm.getName());
 
+            LOG.info("Sending OTP request to URL: " + urlString);
+
             URL url = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
@@ -56,6 +58,7 @@ public class OtpSender {
             BufferedReader reader = new BufferedReader(new InputStreamReader(
                     status >= 200 && status < 300 ? conn.getInputStream() : conn.getErrorStream()
             ));
+
             StringBuilder response = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) response.append(line);
@@ -64,10 +67,29 @@ public class OtpSender {
 
             LOG.info("OTP server response (" + status + "): " + response);
 
-            if (status == 200) return true;
+            // ---- Restore parsing of message from JSON response ----
+            String message = null;
+            String resp = response.toString().trim();
+            if (resp.startsWith("{") && resp.endsWith("}")) {
+                int idx = resp.indexOf("\"message\"");
+                if (idx >= 0) {
+                    int colon = resp.indexOf(":", idx);
+                    if (colon >= 0) {
+                        int startQuote = resp.indexOf("\"", colon);
+                        int endQuote = resp.indexOf("\"", startQuote + 1);
+                        if (startQuote >= 0 && endQuote >= 0) {
+                            message = resp.substring(startQuote + 1, endQuote);
+                        }
+                    }
+                }
+            }
 
-            context.getSession().setAttribute("otpErrorKey", "otpSendFailed");
-            return false;
+            if (status == 200) {
+                return true;
+            } else {
+                context.getSession().setAttribute("otpErrorKey", message != null ? message : "otpSendFailed");
+                return false;
+            }
 
         } catch (Exception e) {
             LOG.error("Failed to send OTP: " + e.getMessage(), e);
