@@ -1,0 +1,9 @@
+- Branding
+- OTP message
+- Phone number (partially masked)
+- Return (change phone)
+- OTP box
+- OTP input(s)
+- Timer for resending (resend link/button after timeout)
+- Receive by phone call
+- Delayed message for help (appears after some time, mentions the possibility of phone call)
