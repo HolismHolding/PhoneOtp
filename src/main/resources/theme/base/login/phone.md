@@ -1,0 +1,12 @@
+# From https://filimo.com/signin
+- Branding
+- Sign-in message
+- Return link (to the previous location)
+- Sign-in box
+- Sign-in command text
+- Phone box (imperative placeholder)
+- Person icon
+- Send code CTA
+- Or
+- Social logins
+- Footer
