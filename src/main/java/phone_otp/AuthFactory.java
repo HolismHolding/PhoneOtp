@@ -69,7 +69,7 @@ public class AuthFactory implements AuthenticatorFactory {
 
     @Override
     public List<ProviderConfigProperty> getConfigProperties() {
-        return Auth.getConfigProperties();
+        return OtpConfig.getConfigProperties();
     }
 
     @Override
