@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Config {
+
     public static List<ProviderConfigProperty> getConfigProperties() {
         List<ProviderConfigProperty> configProperties = new ArrayList<>();
 
@@ -64,36 +65,40 @@ public class Config {
         autoSubmitOtpProperty.setLabel("Auto Submit OTP");
         autoSubmitOtpProperty.setType(ProviderConfigProperty.BOOLEAN_TYPE);
         autoSubmitOtpProperty.setHelpText("If enabled, the form submits automatically when all OTP digits are entered.");
-        configProperties.add(autoSubmitOtpProperty);        
+        configProperties.add(autoSubmitOtpProperty);
 
         return configProperties;
     }
 
     public static <T> T getConfig(AuthenticationFlowContext context, String key, Class<T> type) {
+        return getConfig(context, key, type, null);
+    }
+
+    public static <T> T getConfig(AuthenticationFlowContext context, String key, Class<T> type, T defaultValue) {
         AuthenticatorConfigModel cfg = context.getAuthenticatorConfig();
-        if (cfg == null || cfg.getConfig() == null) return null;
+        if (cfg == null || cfg.getConfig() == null) return defaultValue;
 
         Object value = cfg.getConfig().get(key);
-        if (value == null) return null;
+        if (value == null) return defaultValue;
 
         String strValue;
         if (value instanceof List) {
             List<?> list = (List<?>) value;
-            if (list.isEmpty()) return null;
+            if (list.isEmpty()) return defaultValue;
             strValue = String.valueOf(list.get(0));
         } else {
             strValue = String.valueOf(value);
         }
 
-        if (strValue.isEmpty()) return null;
+        if (strValue.isEmpty()) return defaultValue;
 
         if (type == String.class) return type.cast(strValue);
         if (type == Boolean.class) return type.cast(Boolean.parseBoolean(strValue));
         if (type == Integer.class) {
-            try { return type.cast(Integer.parseInt(strValue)); } 
-            catch (NumberFormatException e) { return null; }
+            try { return type.cast(Integer.parseInt(strValue)); }
+            catch (NumberFormatException e) { return defaultValue; }
         }
 
         return type.cast(strValue);
-    }    
+    }
 }
