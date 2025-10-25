@@ -69,6 +69,7 @@ public class Auth implements Authenticator {
             Boolean enablePhoneCall = Config.getConfig(context, "enablePhoneCall", Boolean.class);
             Boolean separateOtpInputs = Config.getConfig(context, "separateOtpInputs", Boolean.class);
             Boolean autoSubmitOtp = Config.getConfig(context, "autoSubmitOtp", Boolean.class);
+            String logoUrl = Config.getConfig(context, "logoUrl", String.class);
 
             LoginFormsProvider form = context.form();
             form.setAttribute("phone", phone);
@@ -77,6 +78,9 @@ public class Auth implements Authenticator {
             form.setAttribute("enablePhoneCall", enablePhoneCall);
             form.setAttribute("separateOtpInputs", separateOtpInputs);
             form.setAttribute("autoSubmitOtp", autoSubmitOtp);
+            if (logoUrl != null) {
+                form.setAttribute("logoUrl", logoUrl);
+            }
             context.challenge(form.createForm("otp.ftl"));
         } else {
             String error = (String) session.getAttribute("otpErrorKey");
