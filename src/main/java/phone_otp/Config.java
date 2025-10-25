@@ -1,6 +1,8 @@
 package phone_otp;
 
+import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.provider.ProviderConfigProperty;
+import org.keycloak.models.AuthenticatorConfigModel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,4 +54,32 @@ public class Config {
 
         return configProperties;
     }
+
+    public static <T> T getConfig(AuthenticationFlowContext context, String key, Class<T> type) {
+        AuthenticatorConfigModel cfg = context.getAuthenticatorConfig();
+        if (cfg == null || cfg.getConfig() == null) return null;
+
+        Object value = cfg.getConfig().get(key);
+        if (value == null) return null;
+
+        String strValue;
+        if (value instanceof List) {
+            List<?> list = (List<?>) value;
+            if (list.isEmpty()) return null;
+            strValue = String.valueOf(list.get(0));
+        } else {
+            strValue = String.valueOf(value);
+        }
+
+        if (strValue.isEmpty()) return null;
+
+        if (type == String.class) return type.cast(strValue);
+        if (type == Boolean.class) return type.cast(Boolean.parseBoolean(strValue));
+        if (type == Integer.class) {
+            try { return type.cast(Integer.parseInt(strValue)); } 
+            catch (NumberFormatException e) { return null; }
+        }
+
+        return type.cast(strValue);
+    }    
 }

@@ -24,16 +24,7 @@ public class OtpSender {
                 return true;
             }
 
-            String urlTemplate = null;
-            if (cfg != null && cfg.getConfig() != null) {
-                Object value = cfg.getConfig().get("otpUrlTemplate");
-                if (value instanceof List) {
-                    List<?> list = (List<?>) value;
-                    if (!list.isEmpty()) urlTemplate = String.valueOf(list.get(0));
-                } else {
-                    urlTemplate = String.valueOf(value);
-                }
-            }
+            String urlTemplate = Config.getConfig(context, "otpUrlTemplate", String.class);
 
             if (urlTemplate == null || urlTemplate.isEmpty()) {
                 LOG.error("OTP URL template not configured");
