@@ -20,7 +20,7 @@ public class OtpSender {
             RealmModel realm = context.getRealm();
             Boolean fakeSending = Config.getConfig(context, "fakeSendingOtp", Boolean.class);
             if (fakeSending) {
-                LOG.info("Fake sending OTP enabled — skipping actual send for phone: " + phone);
+                LOG.info("Fake sending OTP enabled — skipping actual send for phone: " + phone + " and OTP: " + otp);
                 return true;
             }
 
