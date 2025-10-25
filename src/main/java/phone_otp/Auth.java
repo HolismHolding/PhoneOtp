@@ -60,19 +60,26 @@ public class Auth implements Authenticator {
         }
 
         Integer otpLength = Config.getConfig(context, "otpLength", Integer.class);
-        String otp = otpGenerator.generate();
+        String otp = otpGenerator.generate(otpLength);
         session.setAttribute("otp", otp);
         session.setAttribute("phone", phone);
+
+        Integer secondsToEnableResending = Config.getConfig(context, "secondsToEnableResending", Integer.class);
+        Boolean enablePhoneCall = Config.getConfig(context, "enablePhoneCall", Boolean.class);
 
         if (otpSender.send(context, phone, otp)) {
             LoginFormsProvider form = context.form();
             form.setAttribute("phone", phone);
+            form.setAttribute("otpLength", otp.length());
+            form.setAttribute("secondsToEnableResending", secondsToEnableResending);
+            form.setAttribute("enablePhoneCall", enablePhoneCall);
             context.challenge(form.createForm("otp.ftl"));
         } else {
             String error = (String) session.getAttribute("otpErrorKey");
             context.getSession().setAttribute("phoneErrorKey", error != null ? error : "otpSendFailed");
             authenticate(context);
         }
+
     }
 
     @Override public boolean requiresUser() { return false; }
