@@ -1,6 +1,12 @@
 <#import "template.ftl" as layout>
 <@layout.layoutBody>
 
+<#if logoUrl?? && logoUrl?has_content>
+    <div class="logo-box">
+        <img src="${logoUrl}" alt="Logo" style="max-height: 80px; margin-bottom: 20px;" />
+    </div>
+</#if>
+
 <form id="phone-form" action="${url.loginAction}" method="POST">
     <div class="phone-form">
         <h2>${msg("phoneLabel")}</h2>

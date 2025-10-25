@@ -9,7 +9,7 @@ public class Config {
         List<ProviderConfigProperty> configProperties = new ArrayList<>();
 
         ProviderConfigProperty urlProperty = new ProviderConfigProperty();
-        urlProperty.setName(OtpSender.CONFIG_URL_TEMPLATE);
+        urlProperty.setName("otpUrlTemplate");
         urlProperty.setLabel("OTP URL Template");
         urlProperty.setType(ProviderConfigProperty.STRING_TYPE);
         urlProperty.setHelpText("Example: https://some-host.tld/accounts/sendOtp?phone={phone}&otp={otp}&realm={realm}");

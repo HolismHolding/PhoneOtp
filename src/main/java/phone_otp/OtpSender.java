@@ -14,16 +14,31 @@ import java.util.List;
 public class OtpSender {
 
     private static final Logger LOG = Logger.getLogger(OtpSender.class);
-    public static final String CONFIG_URL_TEMPLATE = "otpUrlTemplate";
 
     public boolean send(AuthenticationFlowContext context, String phone, String otp) {
         try {
             RealmModel realm = context.getRealm();
             AuthenticatorConfigModel cfg = context.getAuthenticatorConfig();
-            String urlTemplate = null;
 
             if (cfg != null && cfg.getConfig() != null) {
-                Object value = cfg.getConfig().get(CONFIG_URL_TEMPLATE);
+                Object fakeValue = cfg.getConfig().get("fakeSendingOtp");
+                boolean fakeSending = false;
+                if (fakeValue instanceof List) {
+                    List<?> list = (List<?>) fakeValue;
+                    if (!list.isEmpty()) fakeSending = Boolean.parseBoolean(String.valueOf(list.get(0)));
+                } else if (fakeValue != null) {
+                    fakeSending = Boolean.parseBoolean(String.valueOf(fakeValue));
+                }
+
+                if (fakeSending) {
+                    LOG.info("Fake sending OTP enabled — skipping actual send for phone: " + phone);
+                    return true;
+                }
+            }
+
+            String urlTemplate = null;
+            if (cfg != null && cfg.getConfig() != null) {
+                Object value = cfg.getConfig().get("otpUrlTemplate");
                 if (value instanceof List) {
                     List<?> list = (List<?>) value;
                     if (!list.isEmpty()) urlTemplate = String.valueOf(list.get(0));
@@ -67,7 +82,6 @@ public class OtpSender {
 
             LOG.info("OTP server response (" + status + "): " + response);
 
-            // ---- Restore parsing of message from JSON response ----
             String message = null;
             String resp = response.toString().trim();
             if (resp.startsWith("{") && resp.endsWith("}")) {

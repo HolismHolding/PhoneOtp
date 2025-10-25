@@ -26,6 +26,22 @@ public class Auth implements Authenticator {
         form.setAttribute("phone", phone);
         form.setAttribute("phoneErrorKey", errorKey);
 
+        AuthenticatorConfigModel cfg = context.getAuthenticatorConfig();
+        if (cfg != null && cfg.getConfig() != null) {
+            Object logoValue = cfg.getConfig().get("logoUrl");
+            String logoUrl = null;
+            if (logoValue instanceof List) {
+                List<?> list = (List<?>) logoValue;
+                if (!list.isEmpty()) logoUrl = String.valueOf(list.get(0));
+            } else if (logoValue != null) {
+                logoUrl = String.valueOf(logoValue);
+            }
+
+            if (logoUrl != null && !logoUrl.isEmpty()) {
+                form.setAttribute("logoUrl", logoUrl);
+            }
+        }
+
         context.challenge(form.createForm("phone.ftl"));
     }
 
