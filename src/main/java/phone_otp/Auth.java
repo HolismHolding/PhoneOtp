@@ -25,21 +25,9 @@ public class Auth implements Authenticator {
         LoginFormsProvider form = context.form();
         form.setAttribute("phone", phone);
         form.setAttribute("phoneErrorKey", errorKey);
-
-        AuthenticatorConfigModel cfg = context.getAuthenticatorConfig();
-        if (cfg != null && cfg.getConfig() != null) {
-            Object logoValue = cfg.getConfig().get("logoUrl");
-            String logoUrl = null;
-            if (logoValue instanceof List) {
-                List<?> list = (List<?>) logoValue;
-                if (!list.isEmpty()) logoUrl = String.valueOf(list.get(0));
-            } else if (logoValue != null) {
-                logoUrl = String.valueOf(logoValue);
-            }
-
-            if (logoUrl != null && !logoUrl.isEmpty()) {
-                form.setAttribute("logoUrl", logoUrl);
-            }
+        String logoUrl = Config.getConfig(context, "logoUrl", String.class);
+        if (logoUrl != null) {
+            form.setAttribute("logoUrl", logoUrl);
         }
 
         context.challenge(form.createForm("phone.ftl"));
@@ -71,6 +59,7 @@ public class Auth implements Authenticator {
             user.setEnabled(true);
         }
 
+        Integer otpLength = Config.getConfig(context, "otpLength", Integer.class);
         String otp = otpGenerator.generate();
         session.setAttribute("otp", otp);
         session.setAttribute("phone", phone);

@@ -17,6 +17,11 @@
 <body class="${properties.kcBodyClass!}">
     <div class="kc-page-wrapper">
         <header class="kc-header">
+            <#if logoUrl?? && logoUrl?has_content>
+                <div class="logo-box">
+                    <img src="${logoUrl}" alt="Logo" style="max-height: 80px; margin-bottom: 20px;" />
+                </div>
+            </#if>
             <h1 class="kc-header-title">${realm.displayName!''}</h1>
         </header>
 

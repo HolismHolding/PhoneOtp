@@ -18,22 +18,10 @@ public class OtpSender {
     public boolean send(AuthenticationFlowContext context, String phone, String otp) {
         try {
             RealmModel realm = context.getRealm();
-            AuthenticatorConfigModel cfg = context.getAuthenticatorConfig();
-
-            if (cfg != null && cfg.getConfig() != null) {
-                Object fakeValue = cfg.getConfig().get("fakeSendingOtp");
-                boolean fakeSending = false;
-                if (fakeValue instanceof List) {
-                    List<?> list = (List<?>) fakeValue;
-                    if (!list.isEmpty()) fakeSending = Boolean.parseBoolean(String.valueOf(list.get(0)));
-                } else if (fakeValue != null) {
-                    fakeSending = Boolean.parseBoolean(String.valueOf(fakeValue));
-                }
-
-                if (fakeSending) {
-                    LOG.info("Fake sending OTP enabled — skipping actual send for phone: " + phone);
-                    return true;
-                }
+            Boolean fakeSending = Config.getConfig(context, "fakeSendingOtp", Boolean.class);
+            if (fakeSending) {
+                LOG.info("Fake sending OTP enabled — skipping actual send for phone: " + phone);
+                return true;
             }
 
             String urlTemplate = null;
