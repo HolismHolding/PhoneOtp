@@ -52,6 +52,20 @@ public class Config {
         enablePhoneCallProperty.setHelpText("Enable this to deliver OTP via a phone call instead of SMS.");
         configProperties.add(enablePhoneCallProperty);
 
+        ProviderConfigProperty separateOtpInputsProperty = new ProviderConfigProperty();
+        separateOtpInputsProperty.setName("separateOtpInputs");
+        separateOtpInputsProperty.setLabel("Separate OTP Inputs");
+        separateOtpInputsProperty.setType(ProviderConfigProperty.BOOLEAN_TYPE);
+        separateOtpInputsProperty.setHelpText("If enabled, the user enters OTP digits in separate input fields instead of one.");
+        configProperties.add(separateOtpInputsProperty);
+
+        ProviderConfigProperty autoSubmitOtpProperty = new ProviderConfigProperty();
+        autoSubmitOtpProperty.setName("autoSubmitOtp");
+        autoSubmitOtpProperty.setLabel("Auto Submit OTP");
+        autoSubmitOtpProperty.setType(ProviderConfigProperty.BOOLEAN_TYPE);
+        autoSubmitOtpProperty.setHelpText("If enabled, the form submits automatically when all OTP digits are entered.");
+        configProperties.add(autoSubmitOtpProperty);        
+
         return configProperties;
     }
 

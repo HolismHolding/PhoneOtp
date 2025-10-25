@@ -64,15 +64,19 @@ public class Auth implements Authenticator {
         session.setAttribute("otp", otp);
         session.setAttribute("phone", phone);
 
-        Integer secondsToEnableResending = Config.getConfig(context, "secondsToEnableResending", Integer.class);
-        Boolean enablePhoneCall = Config.getConfig(context, "enablePhoneCall", Boolean.class);
-
         if (otpSender.send(context, phone, otp)) {
+            Integer secondsToEnableResending = Config.getConfig(context, "secondsToEnableResending", Integer.class);
+            Boolean enablePhoneCall = Config.getConfig(context, "enablePhoneCall", Boolean.class);
+            Boolean separateOtpInputs = Config.getConfig(context, "separateOtpInputs", Boolean.class);
+            Boolean autoSubmitOtp = Config.getConfig(context, "autoSubmitOtp", Boolean.class);
+
             LoginFormsProvider form = context.form();
             form.setAttribute("phone", phone);
             form.setAttribute("otpLength", otp.length());
             form.setAttribute("secondsToEnableResending", secondsToEnableResending);
             form.setAttribute("enablePhoneCall", enablePhoneCall);
+            form.setAttribute("separateOtpInputs", separateOtpInputs);
+            form.setAttribute("autoSubmitOtp", autoSubmitOtp);
             context.challenge(form.createForm("otp.ftl"));
         } else {
             String error = (String) session.getAttribute("otpErrorKey");
