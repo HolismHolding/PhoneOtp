@@ -61,8 +61,8 @@ public class Auth implements Authenticator {
 
         Integer otpLength = Config.getConfig(context, "otpLength", Integer.class);
         String otp = otpGenerator.generate(otpLength);
-        session.setAttribute("otp", otp);
-        session.setAttribute("phone", phone);
+        context.getAuthenticationSession().setAuthNote("otp", otp);
+        context.getAuthenticationSession().setAuthNote("phone", phone);
 
         if (otpSender.send(context, phone, otp)) {
             Integer secondsToEnableResending = Config.getConfig(context, "secondsToEnableResending", Integer.class);
