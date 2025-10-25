@@ -15,6 +15,8 @@ public class OtpVerifier {
         String expectedOtp = (String) context.getSession().getAttribute("otp");
         String phone = (String) context.getSession().getAttribute("phone");
 
+        LOG.infof("Phone: %s, Expected OTP: %s, Entered OTP: %s", phone, expectedOtp, enteredOtp);
+
         if (expectedOtp != null && expectedOtp.equals(enteredOtp)) {
             RealmModel realm = context.getRealm();
             UserModel user = context.getSession().users().getUserByUsername(realm, phone);
